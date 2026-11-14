@@ -1,14 +1,14 @@
-/* Lakiyo's Birthday: interactions and motion. No dependencies. */
+/* Ivy's Birthday: interactions and motion. No dependencies. */
 (() => {
   'use strict';
 
   // ---- Event facts: edit here ------------------------------------------
   const EVENT = {
-    name: "Lakiyo's Birthday",
+    name: "Ivy's Birthday",
     start: '2026-11-28T15:00:00+03:00', // 3:00 PM, East Africa Time
     end: '2026-11-28T21:00:00+03:00',
     venue: 'Zonetria',
-    whatsapp: '', // Lakiyo's number in international format, digits only (e.g. 2547XXXXXXXX). Empty lets the guest pick the chat.
+    whatsapp: '', // Ivy's number in international format, digits only (e.g. 2547XXXXXXXX). Empty lets the guest pick the chat.
   };
 
   // Photos shown as polaroids. `pos` is the focal point for the crop.
@@ -221,7 +221,7 @@
     b.style.setProperty('--i', i % 4);
     b.style.setProperty('--pos', p.pos);
     b.setAttribute('aria-label', 'Open photo: ' + p.cap);
-    b.innerHTML = pin + '<span class="polaroid__img"><img src="images/lakiyo-' + p.n + '.jpg" alt="Lakiyo in white, ' + p.cap.toLowerCase() + '" loading="lazy" decoding="async"></span><span class="polaroid__cap">' + p.cap + '</span>';
+    b.innerHTML = pin + '<span class="polaroid__img"><img src="images/lakiyo-' + p.n + '.jpg" alt="Ivy in white, ' + p.cap.toLowerCase() + '" loading="lazy" decoding="async"></span><span class="polaroid__cap">' + p.cap + '</span>';
     const img = $('img', b);
     if (p.zoom) { img.style.transformOrigin = p.pos; img.style.scale = p.zoom; }
     img.addEventListener('error', () => b.remove()); // a missing photo never leaves a broken frame
@@ -237,7 +237,7 @@
     const p = PHOTOS[lbIndex];
     const swap = () => {
       lbImg.src = 'images/lakiyo-' + p.n + '.jpg';
-      lbImg.alt = 'Lakiyo in white, ' + p.cap.toLowerCase();
+      lbImg.alt = 'Ivy in white, ' + p.cap.toLowerCase();
       lbCap.textContent = p.cap;
     };
     if (!dir || reduceMotion) return swap();
@@ -370,7 +370,7 @@
     clearTimeout(toastT); toastT = setTimeout(() => toast.classList.remove('is-on'), 3200);
   }
 
-  const rsvpText = "Hi Lakiyo! I'll be at your birthday on Saturday 28 November, dressed in plain white. Can't wait to celebrate you!";
+  const rsvpText = "Hi Ivy! I'll be at your birthday on Saturday 28 November, dressed in plain white. Can't wait to celebrate you!";
   const rsvp = $('#rsvp-btn');
   rsvp.href = 'https://wa.me/' + EVENT.whatsapp + '?text=' + encodeURIComponent(rsvpText);
   rsvp.addEventListener('click', () => {
@@ -381,8 +381,8 @@
   $('#cal-btn').addEventListener('click', () => {
     const stamp = (iso) => new Date(iso).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
     const ics = [
-      'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Lakiyo Birthday//EN', 'BEGIN:VEVENT',
-      'UID:lakiyo-birthday-2026@invite',
+      'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Ivy Birthday//EN', 'BEGIN:VEVENT',
+      'UID:ivy-birthday-2026@invite',
       'DTSTAMP:' + stamp(new Date().toISOString()),
       'DTSTART:' + stamp(EVENT.start), 'DTEND:' + stamp(EVENT.end),
       'SUMMARY:' + EVENT.name,
@@ -393,14 +393,14 @@
     ].join('\r\n');
     const url = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
     const a = document.createElement('a');
-    a.href = url; a.download = 'lakiyo-birthday.ics';
+    a.href = url; a.download = 'ivy-birthday.ics';
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 2000);
     say('Saved. Open the file to add it to your calendar.');
   });
 
   $('#share-btn').addEventListener('click', async () => {
-    const data = { title: EVENT.name, text: "You're invited to Lakiyo's all white birthday, Saturday 28 November at 3:00 PM.", url: location.href.split('#')[0] };
+    const data = { title: EVENT.name, text: "You're invited to Ivy's all white birthday, Saturday 28 November at 3:00 PM.", url: location.href.split('#')[0] };
     try {
       if (navigator.share) { await navigator.share(data); return; }
       await navigator.clipboard.writeText(data.url);
