@@ -57,7 +57,7 @@
     x.translate(size + pad, pad + size * 0.35);
     x.shadowColor = color; x.shadowBlur = blur;
     const g = x.createLinearGradient(0, 0, 0, size);
-    g.addColorStop(0, '#ff8fba'); g.addColorStop(1, color);
+    g.addColorStop(0, '#ffffff'); g.addColorStop(1, color);
     x.fillStyle = g;
     heartPath(x, size); x.fill();
     return c;
@@ -70,10 +70,10 @@
     sky.width = W * DPR; sky.height = H * DPR;
     sctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     sprites = [
-      makeSprite(7, '#ff4d8d', 6),
-      makeSprite(12, '#e0306f', 10),
-      makeSprite(20, '#c2185b', 16),
-      makeSprite(34, '#a01248', 26),
+      makeSprite(7, '#e2e6f0', 6),
+      makeSprite(12, '#c5ccd9', 10),
+      makeSprite(20, '#9ea7b8', 16),
+      makeSprite(34, '#70798c', 26),
     ];
     seed();
   }
@@ -117,7 +117,7 @@
     for (const s of sparks) {
       const tw = 0.35 + 0.65 * Math.abs(Math.sin(t * 0.001 * s.s + s.p));
       sctx.globalAlpha = tw * 0.75;
-      sctx.fillStyle = '#ffd3e2';
+      sctx.fillStyle = '#e8ecf4';
       sctx.beginPath(); sctx.arc(s.x, s.y, s.r, 0, 6.28); sctx.fill();
     }
 
@@ -143,7 +143,7 @@
       if (b.life <= 0) { bursts.splice(i, 1); continue; }
       sctx.globalAlpha = Math.max(0, b.life);
       sctx.save(); sctx.translate(b.x, b.y); sctx.rotate(b.rot);
-      if (b.white) { sctx.fillStyle = '#fff7f2'; heartPath(sctx, 7); sctx.fill(); }
+      if (b.white) { sctx.fillStyle = '#ffffff'; heartPath(sctx, 7); sctx.fill(); }
       else { const sp = sprites[b.tier], w = sp.width / DPR; sctx.drawImage(sp, -w / 2, -w / 2, w, w); }
       sctx.restore();
     }
@@ -321,7 +321,7 @@
   /* ============ Fireworks over the finale ============ */
   const fw = $('#fireworks'), fctx = fw.getContext('2d'), finale = $('#rsvp');
   let fwOn = false, fwParts = [], fwW = 0, fwH = 0, fwNext = 0, fwLast = 0;
-  const fwColors = ['#ff4d8d', '#ffc2d6', '#fff7f2', '#ff8fba', '#ffd27a'];
+  const fwColors = ['#ffffff', '#e2e6f0', '#c5ccd9', '#9ea7b8', '#eef1f6'];
   function sizeFw() {
     const r = finale.getBoundingClientRect();
     fwW = r.width; fwH = r.height;
