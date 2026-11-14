@@ -1,0 +1,10 @@
+originals/
+generated/
+.claude/
+.agents/
+.gemini/
+.vercel/
+Invite.pdf
+WhatsApp Image*.jpeg
+3d721bd549c0fc3e4ee4befa1b9ac226.jpg
+*.py
