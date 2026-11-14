@@ -387,7 +387,7 @@
       'DTSTART:' + stamp(EVENT.start), 'DTEND:' + stamp(EVENT.end),
       'SUMMARY:' + EVENT.name,
       'LOCATION:' + EVENT.venue,
-      'DESCRIPTION:Arrival 3:00 PM. Dress code: plain white outfit.',
+      'DESCRIPTION:Arrival 3:00 PM. Dress code: plain white outfit. Reservation fee: Ksh 1,000 sent by 18th Nov.',
       'BEGIN:VALARM', 'TRIGGER:-P1D', 'ACTION:DISPLAY', 'DESCRIPTION:' + EVENT.name + ' is tomorrow. Plain white outfit.', 'END:VALARM',
       'END:VEVENT', 'END:VCALENDAR',
     ].join('\r\n');
