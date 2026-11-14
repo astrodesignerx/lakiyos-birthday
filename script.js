@@ -7,7 +7,7 @@
     name: "Ivy's Birthday",
     start: '2026-11-28T15:00:00+03:00', // 3:00 PM, East Africa Time
     end: '2026-11-28T21:00:00+03:00',
-    venue: 'Zonetria',
+    venue: 'Zoneteria',
     whatsapp: '254716571448',
     mpesaDisplay: '0716 571 448',
   };

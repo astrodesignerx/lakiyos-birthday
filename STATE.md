@@ -2,7 +2,7 @@
 
 ## Goal and constraints
 - Static one-page invite (index.html, styles.css, script.js) plus Vercel API routes in api/ for Paystack M-Pesa payment.
-- Event: Saturday 28 November 2026, 3:00 PM, Zonetria, all white dress code, Ksh 1,000 reservation by 18 November.
+- Event: Saturday 28 November 2026, 3:00 PM, Zoneteria, all white dress code, Ksh 1,000 reservation by 18 November.
 
 ## Current status
 - Hero portrait uses the "Hat's off" photo (lakiyo-10) as an unframed cutout, background removed.
@@ -18,7 +18,6 @@
   - CSS: .dress__grid columns 1.1fr / 1fr; picture max-width 640px (460px under 820px); glow filter on the picture wrapper so the bottom mask does not clip it into a box.
   - Replaced (2026-11-14): photo 01 "Sealed with a kiss" cutouts (too low resolution, files deleted), and before that images/lakiyo-02.jpg in an arched frame.
 - C: drive is effectively full (tens of MB free). Write big temp files to D:\tmp-vercel\tmp.
-- Not yet deployed: the label removals and the dress code cutout are local only.
 
 ## Data
 - images/ = white-outfit edited photos used on the site; generated/ = PNG masters; originals/ = untouched source photos.
@@ -29,7 +28,7 @@
 ## Deploy
 - Live: https://ivys-birthday.vercel.app (Vercel project ivys-birthday, linked in .vercel/).
 - C: drive is nearly full, so deploy with npm cache and temp on D:: set npm_config_cache, TEMP and TMP to D:\tmp-vercel\cache / D:\tmp-vercel\tmp, then `npx -y vercel@latest deploy --prod --yes`.
-- Last production deploy (2026-11-14) includes the Hat's off hero cutout.
+- Last production deploy (2026-11-15) includes the Hat's off hero cutout, hero label removals and the dress code "Sitting pretty" cutout with the raised hand fix.
 
 ## Local preview
 - `python -m http.server 5173 --bind 127.0.0.1` from the project root, then open http://localhost:5173/.

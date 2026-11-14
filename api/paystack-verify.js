@@ -14,7 +14,7 @@ async function sendEmailNotification({ guestName, guestPhone, amountKes, referen
       <p><strong>Amount:</strong> Ksh ${amountKes}</p>
       <p><strong>Reference:</strong> ${reference}</p>
       ${mpesaReceipt ? `<p><strong>M-Pesa Receipt:</strong> ${mpesaReceipt}</p>` : ''}
-      <p style="color:#b8c0ce;font-size:13px;margin-top:20px;">Ivy's Birthday · 28 November 2026 · Zonetria</p>
+      <p style="color:#b8c0ce;font-size:13px;margin-top:20px;">Ivy's Birthday · 28 November 2026 · Zoneteria</p>
     </div>
   `;
 
