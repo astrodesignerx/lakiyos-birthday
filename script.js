@@ -8,7 +8,8 @@
     start: '2026-11-28T15:00:00+03:00', // 3:00 PM, East Africa Time
     end: '2026-11-28T21:00:00+03:00',
     venue: 'Zonetria',
-    whatsapp: '', // Ivy's number in international format, digits only (e.g. 2547XXXXXXXX). Empty lets the guest pick the chat.
+    whatsapp: '254716571448',
+    mpesaDisplay: '0716 571 448',
   };
 
   // Photos shown as polaroids. `pos` is the focal point for the crop.
@@ -406,6 +407,166 @@
       say('Link copied. Send it to the guest list.');
     } catch (e) {
       if (e && e.name !== 'AbortError') say('Copy this link: ' + data.url);
+    }
+  });
+
+  /* ============ Pay Ksh 1,000 Modal (Direct M-Pesa + Paystack STK) ============ */
+  const payModal = $('#pay-modal'), payStatus = $('#pay-status');
+  let payReturn = null, pollTimer = null;
+
+  function setPayStatus(msg, type = '') {
+    payStatus.textContent = msg;
+    payStatus.className = 'paymodal__status' + (type ? ' is-' + type : '');
+  }
+
+  function switchPayTab(tabName) {
+    $$('[data-pay-tab]', payModal).forEach((t) => {
+      const on = t.dataset.payTab === tabName;
+      t.classList.toggle('is-active', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    $$('[data-pay-panel]', payModal).forEach((p) => {
+      p.hidden = p.dataset.payPanel !== tabName;
+    });
+    setPayStatus('');
+  }
+
+  $$('[data-pay-tab]', payModal).forEach((t) => {
+    t.addEventListener('click', () => switchPayTab(t.dataset.payTab));
+  });
+
+  function openPayModal() {
+    payReturn = document.activeElement;
+    payModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => payModal.classList.add('is-on'));
+    $('#pay-close').focus();
+  }
+
+  function closePayModal() {
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    payModal.classList.remove('is-on');
+    document.body.style.overflow = '';
+    setTimeout(() => { payModal.hidden = true; }, 240);
+    if (payReturn) payReturn.focus({ preventScroll: true });
+  }
+
+  $$('[data-open-pay]').forEach((btn) => btn.addEventListener('click', openPayModal));
+  $('#pay-close').addEventListener('click', closePayModal);
+  payModal.addEventListener('click', (e) => { if (e.target === payModal) closePayModal(); });
+  addEventListener('keydown', (e) => { if (!payModal.hidden && e.key === 'Escape') closePayModal(); });
+
+  // Auto-select Instant PIN Prompt tab if Paystack Live is active on Vercel
+  fetch('/api/paystack-stk').then((r) => r.ok ? r.json() : null).then((cfg) => {
+    if (cfg && cfg.configured && cfg.mode === 'live') switchPayTab('stk');
+  }).catch(() => {});
+
+  // 1-tap Copy M-Pesa number
+  const copyBtn = $('#copy-mpesa');
+  copyBtn.addEventListener('click', async () => {
+    const raw = EVENT.mpesaDisplay.replace(/\s+/g, '');
+    try {
+      await navigator.clipboard.writeText(raw);
+      copyBtn.textContent = 'Copied!';
+      setPayStatus('Number copied (' + raw + '). Paste in M-Pesa Send Money.', 'ok');
+      setTimeout(() => { copyBtn.textContent = 'Copy'; }, 2200);
+    } catch {
+      setPayStatus('M-Pesa number: ' + raw);
+    }
+  });
+
+  // Direct M-Pesa confirmation (WhatsApp + optional email alert)
+  $('#direct-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = $('#direct-name').value.trim();
+    const code = $('#direct-code').value.trim();
+    if (!name) return;
+
+    fetch('/api/notify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, code }),
+    }).catch(() => {});
+
+    const msg = "Hi Ivy! I've sent the Ksh 1,000 reservation fee to " + EVENT.mpesaDisplay +
+      '. Name: ' + name + (code ? ' | M-Pesa Ref: ' + code : '') + '. See you on 28 November!';
+    burst(window.innerWidth / 2, window.innerHeight / 2, 70);
+    setPayStatus('Opening WhatsApp to confirm with Ivy...', 'ok');
+    window.open('https://wa.me/' + EVENT.whatsapp + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+  });
+
+  // Paystack STK Push (M-Pesa PIN Prompt)
+  const stkBtn = $('#stk-submit');
+  $('#stk-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = $('#stk-name').value.trim();
+    const phone = $('#stk-phone').value.trim();
+    const email = $('#stk-email').value.trim();
+    if (!name || !phone) return;
+
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    stkBtn.disabled = true;
+    stkBtn.querySelector('span').textContent = 'Sending PIN prompt...';
+    setPayStatus('Sending M-Pesa STK prompt to ' + phone + '...');
+
+    try {
+      const res = await fetch('/api/paystack-stk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, email }),
+      });
+      const data = await res.json();
+
+      if (data.fallback) {
+        stkBtn.disabled = false;
+        stkBtn.querySelector('span').textContent = 'Send M-Pesa PIN Prompt';
+        switchPayTab('direct');
+        setPayStatus('Instant PIN prompt is not active yet — send directly to ' + EVENT.mpesaDisplay + ' above.', 'err');
+        return;
+      }
+
+      if (!res.ok || !data.ok) {
+        stkBtn.disabled = false;
+        stkBtn.querySelector('span').textContent = 'Send M-Pesa PIN Prompt';
+        setPayStatus(data.error || 'Could not send prompt. Try Send to M-Pesa tab.', 'err');
+        return;
+      }
+
+      setPayStatus(data.display_text || 'Check your phone and enter your M-Pesa PIN...');
+      stkBtn.querySelector('span').textContent = 'Waiting for PIN...';
+
+      const ref = data.reference;
+      let attempts = 0;
+      pollTimer = setInterval(async () => {
+        attempts++;
+        if (attempts > 45) {
+          clearInterval(pollTimer); pollTimer = null;
+          stkBtn.disabled = false;
+          stkBtn.querySelector('span').textContent = 'Send M-Pesa PIN Prompt';
+          setPayStatus('Timed out waiting for M-Pesa confirmation. If you paid, confirm on WhatsApp.', 'err');
+          return;
+        }
+        try {
+          const vr = await fetch('/api/paystack-verify?reference=' + encodeURIComponent(ref));
+          const vd = await vr.json();
+          if (vd.status === 'success') {
+            clearInterval(pollTimer); pollTimer = null;
+            stkBtn.disabled = false;
+            stkBtn.querySelector('span').textContent = 'Paid — Thank you!';
+            burst(window.innerWidth / 2, window.innerHeight / 2, 90);
+            setPayStatus('Ksh 1,000 received! Ivy has been notified.', 'ok');
+          } else if (vd.status === 'failed' || vd.status === 'abandoned') {
+            clearInterval(pollTimer); pollTimer = null;
+            stkBtn.disabled = false;
+            stkBtn.querySelector('span').textContent = 'Send M-Pesa PIN Prompt';
+            setPayStatus(vd.gateway_response || 'Payment was cancelled or failed. Try again.', 'err');
+          }
+        } catch { /* retry next tick */ }
+      }, 3000);
+    } catch {
+      stkBtn.disabled = false;
+      stkBtn.querySelector('span').textContent = 'Send M-Pesa PIN Prompt';
+      setPayStatus('Network error. Please use the Send to M-Pesa tab.', 'err');
     }
   });
 })();

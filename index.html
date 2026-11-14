@@ -135,6 +135,7 @@
           <p class="card__label">Reservation</p>
           <h3>Ksh 1,000</h3>
           <p>Please send the <strong>Ksh 1,000</strong> reservation fee by <strong>18 November</strong> so I can save your spot.</p>
+          <button class="card__btn" type="button" data-open-pay>Pay Ksh 1,000</button>
         </article>
       </div>
     </section>
@@ -224,7 +225,8 @@
           <footer>With love, <span>Ivy</span></footer>
         </blockquote>
         <div class="finale__actions reveal">
-          <a class="btn btn--glow" id="rsvp-btn" href="#" target="_blank" rel="noopener"><span>Confirm on WhatsApp</span></a>
+          <button class="btn btn--glow" type="button" data-open-pay><span>Pay Ksh 1,000 (M-Pesa)</span></button>
+          <a class="btn btn--ghost" id="rsvp-btn" href="#" target="_blank" rel="noopener"><span>Confirm on WhatsApp</span></a>
           <button class="btn btn--ghost" id="cal-btn" type="button"><span>Add to calendar</span></button>
           <button class="btn btn--ghost" id="share-btn" type="button"><span>Share invite</span></button>
         </div>
@@ -253,6 +255,73 @@
     <button class="lightbox__btn lightbox__next" type="button" aria-label="Next photo">
       <svg viewBox="0 0 24 24" width="22" height="22"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
     </button>
+  </div>
+
+  <!-- Pay Ksh 1,000 Reservation Modal -->
+  <div class="paymodal" id="pay-modal" role="dialog" aria-modal="true" aria-labelledby="pay-title" hidden>
+    <div class="paymodal__card">
+      <button class="lightbox__btn paymodal__close" id="pay-close" type="button" aria-label="Close payment window">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+      </button>
+
+      <p class="eyebrow">Reservation Fee · Due 18 Nov</p>
+      <h2 class="paymodal__title" id="pay-title">Reserve Your Spot</h2>
+      <p class="paymodal__amount">Ksh 1,000</p>
+
+      <div class="paymodal__tabs" role="tablist" aria-label="Payment method">
+        <button class="paymodal__tab is-active" type="button" role="tab" aria-selected="true" data-pay-tab="direct">Send to M-Pesa</button>
+        <button class="paymodal__tab" type="button" role="tab" aria-selected="false" data-pay-tab="stk">Instant PIN Prompt</button>
+      </div>
+
+      <!-- Panel 1: Direct M-Pesa to Ivy (works immediately) -->
+      <div class="paymodal__panel" data-pay-panel="direct">
+        <div class="paymodal__numberbox">
+          <div>
+            <span class="paymodal__label">Ivy's M-Pesa Number</span>
+            <strong class="paymodal__number" id="ivy-mpesa-num">0716 571 448</strong>
+          </div>
+          <button class="paymodal__copy" id="copy-mpesa" type="button">Copy</button>
+        </div>
+        <ol class="paymodal__steps">
+          <li>Go to <strong>M-Pesa → Send Money</strong> on your phone.</li>
+          <li>Enter <strong>0716 571 448</strong> and send <strong>Ksh 1,000</strong>.</li>
+          <li>Enter your name &amp; M-Pesa code below to notify me.</li>
+        </ol>
+        <form class="paymodal__form" id="direct-form">
+          <label class="paymodal__field">
+            <span>Your Name</span>
+            <input type="text" id="direct-name" placeholder="e.g. Brenda" required maxlength="60">
+          </label>
+          <label class="paymodal__field">
+            <span>M-Pesa Code or Phone (optional)</span>
+            <input type="text" id="direct-code" placeholder="e.g. UA84K92P1X" maxlength="30">
+          </label>
+          <button class="btn btn--glow paymodal__submit" type="submit"><span>Confirm Payment to Ivy</span></button>
+        </form>
+      </div>
+
+      <!-- Panel 2: Paystack M-Pesa STK Push (auto PIN prompt) -->
+      <div class="paymodal__panel" data-pay-panel="stk" hidden>
+        <p class="paymodal__note">Enter your M-Pesa number below and we will pop up the <strong>Ksh 1,000</strong> PIN prompt directly on your phone.</p>
+        <form class="paymodal__form" id="stk-form">
+          <label class="paymodal__field">
+            <span>Your Name</span>
+            <input type="text" id="stk-name" placeholder="e.g. Brenda" required maxlength="60">
+          </label>
+          <label class="paymodal__field">
+            <span>M-Pesa Phone Number</span>
+            <input type="tel" id="stk-phone" placeholder="0712 345 678" required maxlength="20">
+          </label>
+          <label class="paymodal__field">
+            <span>Email for Receipt (optional)</span>
+            <input type="email" id="stk-email" placeholder="you@example.com" maxlength="90">
+          </label>
+          <button class="btn btn--glow paymodal__submit" id="stk-submit" type="submit"><span>Send M-Pesa PIN Prompt</span></button>
+        </form>
+      </div>
+
+      <p class="paymodal__status" id="pay-status" role="status" aria-live="polite"></p>
+    </div>
   </div>
 
   <script src="script.js" defer></script>

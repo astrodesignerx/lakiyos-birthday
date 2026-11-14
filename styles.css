@@ -482,6 +482,85 @@ body.is-live .hero__neon { animation: rise var(--dur-4) var(--ease-out) forwards
   .lightbox__figure { margin-bottom: 70px; }
 }
 
+/* ---------- payment modal ---------- */
+.card__btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-top: 16px; padding: 9px 18px; border-radius: 999px;
+  font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; font-weight: 500;
+  color: #0b0d12; background: linear-gradient(135deg, #ffffff 0%, var(--rose) 100%);
+  box-shadow: 0 6px 20px rgba(212, 216, 226, .24);
+  transition: transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out);
+}
+.card__btn:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(220, 226, 238, .4); }
+.card__btn:active { transform: scale(.96); }
+
+.paymodal {
+  position: fixed; inset: 0; z-index: 65;
+  display: grid; place-items: center; padding: 18px;
+  background: rgba(5, 6, 8, .88); backdrop-filter: blur(14px);
+  overflow-y: auto;
+  opacity: 0; transition: opacity var(--dur-2) var(--ease-std);
+}
+.paymodal[hidden] { display: none; }
+.paymodal.is-on { opacity: 1; }
+.paymodal__card {
+  position: relative; width: 100%; max-width: 460px;
+  padding: clamp(24px, 5vw, 34px); border-radius: 24px;
+  background: linear-gradient(180deg, rgba(28, 32, 42, .96), rgba(11, 13, 18, .98));
+  border: 1px solid var(--line);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, .7), 0 0 60px rgba(212, 218, 232, .16);
+  transform: translateY(14px) scale(.97);
+  transition: transform var(--dur-3) var(--ease-out);
+}
+.paymodal.is-on .paymodal__card { transform: none; }
+.paymodal__close { position: absolute; top: 16px; right: 16px; width: 40px; height: 40px; }
+.paymodal__title { font-family: var(--serif); font-weight: 500; font-size: 2rem; line-height: 1.1; color: var(--pearl); margin-top: 6px; }
+.paymodal__amount {
+  display: inline-block; margin-top: 8px; padding: 4px 12px; border-radius: 999px;
+  font-size: .78rem; letter-spacing: .18em; text-transform: uppercase; font-weight: 500;
+  color: #0b0d12; background: var(--rose);
+}
+.paymodal__tabs {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+  margin: 20px 0 18px; padding: 4px; border-radius: 999px;
+  background: rgba(255, 255, 255, .05); border: 1px solid var(--line);
+}
+.paymodal__tab {
+  padding: 9px 10px; border-radius: 999px; font-size: .72rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--muted); font-weight: 500;
+  transition: background-color var(--dur-2) var(--ease-std), color var(--dur-2) var(--ease-std);
+}
+.paymodal__tab.is-active { background: var(--pearl); color: #0b0d12; }
+.paymodal__numberbox {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 16px; border-radius: 16px; margin-bottom: 14px;
+  background: rgba(255, 255, 255, .05); border: 1px solid var(--line);
+}
+.paymodal__label { display: block; font-size: .66rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+.paymodal__number { font-family: var(--serif); font-size: 1.55rem; letter-spacing: .04em; color: var(--pearl); }
+.paymodal__copy {
+  padding: 8px 16px; border-radius: 999px; font-size: .72rem; letter-spacing: .16em;
+  text-transform: uppercase; font-weight: 500;
+  color: var(--pearl); background: rgba(212, 218, 232, .16); border: 1px solid var(--line);
+}
+.paymodal__copy:hover { background: rgba(212, 218, 232, .28); }
+.paymodal__steps { display: grid; gap: 6px; margin-bottom: 16px; padding-left: 18px; list-style: decimal; color: var(--muted); font-size: .9rem; }
+.paymodal__note { color: var(--muted); font-size: .94rem; margin-bottom: 14px; }
+.paymodal__form { display: grid; gap: 12px; }
+.paymodal__field { display: grid; gap: 5px; text-align: left; }
+.paymodal__field span { font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: var(--blush); }
+.paymodal__field input {
+  width: 100%; padding: 12px 14px; border-radius: 12px;
+  background: rgba(255, 255, 255, .06); border: 1px solid var(--line);
+  color: var(--pearl); font: inherit; font-size: .96rem;
+}
+.paymodal__field input:focus { outline: none; border-color: var(--pearl); background: rgba(255, 255, 255, .1); }
+.paymodal__submit { width: 100%; margin-top: 6px; }
+.paymodal__submit[disabled] { opacity: .6; cursor: wait; }
+.paymodal__status { min-height: 1.4em; margin-top: 14px; text-align: center; font-size: .88rem; color: var(--blush); }
+.paymodal__status.is-ok { color: #b9f6ca; }
+.paymodal__status.is-err { color: #ffab91; }
+
 /* ---------- reduce motion: cut straight to end states ---------- */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
