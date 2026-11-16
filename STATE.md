@@ -17,6 +17,7 @@
   - Full uncropped cutout kept at generated/lakiyo-11-cutout.png. Its raised hand was hand-fixed (rembg left it about 50% transparent, dark skin on the dark backdrop): in cutout box x760-960, y330-480 the alpha was firmed and RGB copied from generated/lakiyo-11.png at offset (+57, +94). Redo this if the cutout is ever regenerated.
   - CSS: .dress__grid columns 1.1fr / 1fr; picture max-width 640px (460px under 820px); glow filter on the picture wrapper so the bottom mask does not clip it into a box.
   - Replaced (2026-11-14): photo 01 "Sealed with a kiss" cutouts (too low resolution, files deleted), and before that images/lakiyo-02.jpg in an arched frame.
+- Gallery has 12 photos (3 full rows of 4 on desktop). Added 2026-11-16: photo 14 "Picture perfect" (mirror selfie), from originals/lakiyo-14.jpg (source thelakiyo-20261115-0001.jpg.jpeg) restyled to a white outfit in ChatGPT -> generated/lakiyo-14.png -> images/lakiyo-14.jpg (JPEG quality 92, same as the others). Photo 03 is not in the gallery.
 - C: drive is effectively full (tens of MB free). Write big temp files to D:\tmp-vercel\tmp.
 
 ## Data
