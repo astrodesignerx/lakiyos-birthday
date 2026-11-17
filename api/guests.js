@@ -18,14 +18,16 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const password = process.env.GUESTS_PASSWORD || '';
-  if (!password) {
+  // One password per person who may open the list (GUESTS_PASSWORD for the host, GUESTS_PASSWORD_IVY for Ivy).
+  const passwords = [process.env.GUESTS_PASSWORD, process.env.GUESTS_PASSWORD_IVY].filter(Boolean);
+  if (!passwords.length) {
     return res.status(503).json({ error: 'The guest list password is not set up yet.' });
   }
 
   const auth = String(req.headers.authorization || '');
   const given = auth.startsWith('Bearer ') ? auth.slice(7).trim() : '';
-  if (!given || !safeEqual(given, password)) {
+  const allowed = given && passwords.map((p) => safeEqual(given, p)).some(Boolean);
+  if (!allowed) {
     await new Promise((r) => setTimeout(r, 600)); // slow down guessing
     return res.status(401).json({ error: 'Wrong password.' });
   }
