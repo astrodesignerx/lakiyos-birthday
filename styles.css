@@ -197,6 +197,7 @@ main, .footer, .topbar { position: relative; z-index: 1; max-width: 100%; overfl
 .topbar__nav a:hover::after, .topbar__nav a.is-active::after { transform: scaleX(1); }
 .topbar__nav .topbar__cta { padding: 8px 18px; border-radius: 999px; color: #0b0d12; font-weight: 500; background: linear-gradient(135deg, #ffffff, var(--rose)); }
 .topbar__nav .topbar__cta::after { display: none; }
+.topbar__nav a.topbar__cta:hover, .topbar__nav a.topbar__cta.is-active, .topbar__nav a.topbar__cta:focus-visible { color: #0b0d12; } /* stays dark on the light pill in every state */
 @media (max-width: 720px) { .topbar__nav a:not(.topbar__cta) { display: none; } }
 
 /* ---------- hero ---------- */
