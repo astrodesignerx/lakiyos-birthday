@@ -13,7 +13,7 @@
 
   // Photos shown as polaroids. `pos` is the focal point for the crop.
   const PHOTOS = [
-    { n: '02', cap: 'All smiles', pos: '50% 55%', zoom: 1.7 },
+    { n: '14', cap: 'Picture perfect', pos: '50% 40%' },
     { n: '10', cap: "Hat's off", pos: '50% 20%' },
     { n: '01', cap: 'Sealed with a kiss', pos: '50% 30%' },
     { n: '12', cap: 'Pure joy', pos: '50% 28%' },
@@ -24,7 +24,7 @@
     { n: '13', cap: 'Soft glow', pos: '50% 20%' },
     { n: '07', cap: 'Mirror, mirror', pos: '60% 40%' },
     { n: '05', cap: 'Grand entrance', pos: '50% 30%' },
-    { n: '14', cap: 'Picture perfect', pos: '50% 40%' },
+    { n: '02', cap: 'All smiles', pos: '50% 55%', zoom: 1.7 },
   ];
   // -----------------------------------------------------------------------
 
