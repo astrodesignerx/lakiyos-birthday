@@ -536,6 +536,7 @@ body.is-live .hero__neon { animation: rise var(--dur-4) var(--ease-out) forwards
   font-size: .78rem; letter-spacing: .18em; text-transform: uppercase; font-weight: 500;
   color: #0b0d12; background: var(--rose);
 }
+.paymodal__amount small { font-size: .85em; opacity: .7; letter-spacing: .1em; }
 .paymodal__note { color: var(--muted); font-size: .94rem; margin: 20px 0 14px; }
 .paymodal__form { display: grid; gap: 12px; }
 .paymodal__field { display: grid; gap: 5px; text-align: left; }

@@ -1,4 +1,4 @@
-// Vercel Serverless Function: initiates a KES 1,000 M-Pesa STK Push via Paystack.
+// Vercel Serverless Function: initiates a KES 1,016 (1,000 + fee) M-Pesa STK Push via Paystack.
 function normalizeKenyanPhone(raw) {
   const digits = String(raw || '').replace(/\D/g, '');
   if (digits.startsWith('254') && digits.length === 12) return '+' + digits;
@@ -57,7 +57,7 @@ module.exports = async (req, res) => {
       },
       body: JSON.stringify({
         email,
-        amount: 100000, // Ksh 1,000 in cents/subunits
+        amount: 101600, // Ksh 1,016 in cents: Ksh 1,000 plus the 1.5% Paystack M-Pesa fee, so Ivy nets ~Ksh 1,000
         currency: 'KES',
         reference,
         // Route the money to Ivy's Paystack subaccount (settles to her M-Pesa) when configured.
@@ -95,7 +95,7 @@ module.exports = async (req, res) => {
       status: data.data?.status || 'pay_offline',
       display_text:
         data.data?.display_text ||
-        'Check your phone and enter your M-Pesa PIN to complete the Ksh 1,000 payment.',
+        'Check your phone and enter your M-Pesa PIN to complete the Ksh 1,016 payment (Ksh 1,000 + Ksh 16 fee).',
     });
   } catch (err) {
     return res.status(500).json({ error: 'Server error while sending M-Pesa prompt.' });
