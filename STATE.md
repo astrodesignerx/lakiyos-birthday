@@ -44,5 +44,5 @@
   - `api/paystack-sync.js` can backfill past Paystack `success` transactions when `GSHEET_WEBHOOK_SECRET` is set.
   - Still to set in Vercel (Production): `GSHEET_WEBHOOK_URL` (Apps Script Web App URL) and optional `GSHEET_WEBHOOK_SECRET`.
 - Still to do in the Paystack dashboard: set the webhook URL to `https://ivys-birthday.vercel.app/api/paystack-webhook`, and make sure Mobile Money (M-Pesa) is enabled under Settings > Preferences.
-- Optional and not set: `RESEND_API_KEY`, `IVY_EMAIL`, `RESEND_FROM` for email receipts.
-- Optional and not set: `PAYSTACK_SUBACCOUNT` (Ivy's subaccount code, `ACCT_...`). When set, `api/paystack-stk.js` routes each charge to that subaccount with `bearer: 'subaccount'`, so the money settles to Ivy's M-Pesa and she pays the Paystack fee. Give the subaccount a 0% main-account share.
+- Payment alert emails (set 2026-11-17): `RESEND_API_KEY` is a sending-only key from Ivy's own Resend account, and `IVY_EMAIL` is her Gmail. `RESEND_FROM` is not set, so mail goes from `onboarding@resend.dev`, which Resend only delivers to the account owner (Ivy). Sending to anyone else needs a verified domain.
+- `PAYSTACK_SUBACCOUNT` is set (2026-11-17) to Ivy's M-Pesa subaccount (0% main-account share, verified). Because it is set, `api/paystack-stk.js` routes each charge to that subaccount with `bearer: 'subaccount'`, so the money settles to Ivy's M-Pesa and she pays the Paystack fee. Guests are charged Ksh 1,016 (Ksh 1,000 + the 1.5% M-Pesa fee) so Ivy nets about Ksh 1,000.
