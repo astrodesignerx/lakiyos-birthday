@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#07080a">
+  <title>Guest List | Ivy's Birthday</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23d4d8e2' d='M16 28S3 20.5 3 11.5A6.5 6.5 0 0 1 16 8a6.5 6.5 0 0 1 13 3.500C29 20.500 16 28 16 28z'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Great+Vibes&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07080a; --bg-2: #111318; --silver: #d4d8e2; --silver-deep: #8b92a5;
+      --text: rgba(255, 255, 255, .92); --muted: rgba(226, 230, 240, .64);
+      --line: rgba(212, 216, 226, .18); --glass: rgba(212, 216, 226, .06);
+      --ok: #9fd8b4; --err: #f2a7a7;
+      --serif: "Cormorant Garamond", "Times New Roman", serif;
+      --script: "Great Vibes", "Brush Script MT", cursive;
+      --sans: "Jost", system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0; min-height: 100vh; background: var(--bg); color: var(--text);
+      font: 400 15px/1.5 var(--sans);
+      background-image: radial-gradient(1200px 600px at 50% -10%, rgba(212, 216, 226, .08), transparent 60%);
+    }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 40px 16px 64px; }
+    header { text-align: center; margin-bottom: 28px; }
+    .mono { font-family: var(--script); font-size: 2.6rem; line-height: 1; color: var(--silver); text-shadow: 0 0 24px rgba(220, 226, 238, .35); }
+    h1 { font: 500 clamp(1.8rem, 5vw, 2.4rem)/1.1 var(--serif); margin: 10px 0 4px; letter-spacing: .01em; }
+    .sub { color: var(--muted); font-size: .78rem; letter-spacing: .24em; text-transform: uppercase; margin: 0; }
+
+    .card { background: var(--glass); border: 1px solid var(--line); border-radius: 14px; }
+
+    /* sign in */
+    #login { max-width: 380px; margin: 0 auto; padding: 26px 22px; }
+    #login label { display: block; font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    input[type=password], input[type=search] {
+      width: 100%; font: inherit; color: var(--text); background: rgba(0, 0, 0, .35);
+      border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; outline: none;
+    }
+    input:focus { border-color: var(--silver-deep); box-shadow: 0 0 0 3px rgba(212, 216, 226, .12); }
+    button {
+      font: 500 .74rem/1 var(--sans); letter-spacing: .2em; text-transform: uppercase; cursor: pointer;
+      border-radius: 999px; padding: 12px 18px; border: 1px solid var(--line); background: transparent; color: var(--text);
+    }
+    button.primary { background: var(--silver); color: #0b0c10; border-color: var(--silver); }
+    button:disabled { opacity: .55; cursor: default; }
+    #login button { width: 100%; margin-top: 14px; }
+    .msg { min-height: 1.4em; margin: 12px 0 0; font-size: .88rem; color: var(--err); text-align: center; }
+
+    /* list */
+    #list[hidden], #login[hidden] { display: none; }
+    .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
+    .stat { padding: 16px; text-align: center; }
+    .stat b { display: block; font: 600 clamp(1.5rem, 5vw, 2.1rem)/1.1 var(--serif); color: #fff; font-variant-numeric: tabular-nums; }
+    .stat span { font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+    .bar { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+    .bar input { flex: 1 1 220px; }
+    .bar .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .updated { color: var(--muted); font-size: .78rem; margin: 0 0 10px; }
+
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { font-weight: 500; font-size: .66rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+    tr:last-child td { border-bottom: 0; }
+    td.n { color: var(--muted); font-variant-numeric: tabular-nums; width: 2.5em; }
+    td .name { font-weight: 500; }
+    td .small { color: var(--muted); font-size: .8rem; word-break: break-all; }
+    td.amt { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    a { color: var(--silver); }
+    .empty { padding: 36px 16px; text-align: center; color: var(--muted); }
+
+    @media (max-width: 640px) {
+      .wrap { padding-top: 28px; }
+      .stats { gap: 8px; }
+      .stat { padding: 12px 6px; }
+      thead { display: none; }
+      table, tbody, tr, td { display: block; width: 100%; }
+      tr { padding: 12px 14px; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: 2em 1fr auto; gap: 2px 8px; }
+      td { padding: 0; border: 0; }
+      td.n { grid-row: span 3; }
+      td.amt { grid-column: 3; grid-row: 1; text-align: right; }
+      td.when, td.ref { grid-column: 2 / -1; }
+      .bar .actions { width: 100%; }
+      .bar .actions button { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="mono" aria-hidden="true">I.</div>
+      <h1>Guest list</h1>
+      <p class="sub">Paid reservations · private</p>
+    </header>
+
+    <form id="login" class="card" autocomplete="on">
+      <label for="pw">Password</label>
+      <input id="pw" type="password" autocomplete="current-password" required>
+      <button class="primary" type="submit">Open list</button>
+      <p class="msg" id="login-msg" role="alert"></p>
+    </form>
+
+    <section id="list" hidden>
+      <div class="stats">
+        <div class="stat card"><b id="s-count">0</b><span>Guests paid</span></div>
+        <div class="stat card"><b id="s-total">0</b><span>Ksh collected</span></div>
+        <div class="stat card"><b id="s-today">0</b><span>Paid today</span></div>
+      </div>
+      <div class="bar">
+        <input id="q" type="search" placeholder="Search name, phone or receipt" aria-label="Search guests">
+        <div class="actions">
+          <button type="button" id="refresh">Refresh</button>
+          <button type="button" id="csv">Download CSV</button>
+          <button type="button" id="logout">Lock</button>
+        </div>
+      </div>
+      <p class="updated" id="updated"></p>
+      <div class="card">
+        <table>
+          <thead><tr><th>#</th><th>Guest</th><th>Paid</th><th>Receipt</th><th>Amount</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+        <div class="empty" id="empty" hidden>No payments yet.</div>
+      </div>
+      <p class="msg" id="list-msg" role="alert"></p>
+    </section>
+  </main>
+
+  <script>
+  (() => {
+    const KEY = 'ivy-guests-pw';
+    const $ = (id) => document.getElementById(id);
+    const store = {
+      get() { try { return localStorage.getItem(KEY) || ''; } catch (e) { return ''; } },
+      set(v) { try { localStorage.setItem(KEY, v); } catch (e) { /* private mode */ } },
+      clear() { try { localStorage.removeItem(KEY); } catch (e) { /* ignore */ } },
+    };
+    let password = store.get();
+    let guests = [];
+
+    const fmtNum = (n) => Number(n || 0).toLocaleString('en-KE');
+    const fmtDate = (s) => {
+      const d = new Date(s);
+      if (isNaN(d)) return '';
+      return d.toLocaleString('en-KE', { timeZone: 'Africa/Nairobi', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
+    };
+    const esc = (s) => String(s || '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const nairobiDay = (d) => new Date(d).toLocaleDateString('en-CA', { timeZone: 'Africa/Nairobi' });
+
+    async function load() {
+      $('list-msg').textContent = '';
+      $('refresh').disabled = true;
+      try {
+        const r = await fetch('/api/guests', { headers: { Authorization: 'Bearer ' + password }, cache: 'no-store' });
+        const data = await r.json().catch(() => ({}));
+        if (r.status === 401) { lock('Wrong password.'); return false; }
+        if (!r.ok) throw new Error(data.error || 'Could not load the list.');
+        guests = data.guests || [];
+        $('s-count').textContent = fmtNum(data.count);
+        $('s-total').textContent = fmtNum(data.total);
+        const today = nairobiDay(Date.now());
+        $('s-today').textContent = fmtNum(guests.filter((g) => g.paidAt && nairobiDay(g.paidAt) === today).length);
+        $('updated').textContent = 'Updated ' + fmtDate(data.fetchedAt);
+        render();
+        return true;
+      } catch (e) {
+        $('list-msg').textContent = e.message;
+        return false;
+      } finally {
+        $('refresh').disabled = false;
+      }
+    }
+
+    function render() {
+      const q = $('q').value.trim().toLowerCase();
+      const shown = guests.filter((g) => !q || [g.name, g.phone, g.email, g.receipt, g.reference].join(' ').toLowerCase().includes(q));
+      $('rows').innerHTML = shown.map((g, i) => `
+        <tr>
+          <td class="n">${guests.length - guests.indexOf(g)}</td>
+          <td><div class="name">${esc(g.name)}</div><div class="small">${g.phone ? `<a href="tel:${esc(g.phone)}">${esc(g.phone)}</a>` : ''}${g.email ? ' · ' + esc(g.email) : ''}</div></td>
+          <td class="when small">${esc(fmtDate(g.paidAt))}</td>
+          <td class="ref small">${esc(g.receipt || g.reference)}</td>
+          <td class="amt">Ksh ${fmtNum(g.amount)}</td>
+        </tr>`).join('');
+      $('empty').hidden = shown.length > 0;
+      $('empty').textContent = guests.length ? 'No guest matches that search.' : 'No payments yet.';
+    }
+
+    function lock(msg) {
+      password = ''; store.clear(); guests = [];
+      $('list').hidden = true; $('login').hidden = false;
+      $('login-msg').textContent = msg || '';
+      $('pw').value = ''; $('pw').focus();
+    }
+
+    async function unlock() {
+      $('login').hidden = true; $('list').hidden = false;
+      if (await load()) store.set(password);
+    }
+
+    $('login').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      password = $('pw').value.trim();
+      if (!password) return;
+      $('login-msg').textContent = '';
+      await unlock();
+    });
+    $('refresh').addEventListener('click', load);
+    $('logout').addEventListener('click', () => lock(''));
+    $('q').addEventListener('input', render);
+    $('csv').addEventListener('click', () => {
+      const cell = (v) => '"' + String(v ?? '').replace(/"/g, '""') + '"';
+      const head = ['Name', 'Phone', 'Email', 'Paid at (Nairobi)', 'Amount (Ksh)', 'Receipt', 'Reference'];
+      const lines = [head.map(cell).join(',')].concat(guests.map((g) =>
+        [g.name, g.phone, g.email, fmtDate(g.paidAt), g.amount, g.receipt, g.reference].map(cell).join(',')));
+      const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'ivy-guest-list.csv';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    });
+
+    if (password) unlock(); else $('pw').focus();
+  })();
+  </script>
+</body>
+</html>

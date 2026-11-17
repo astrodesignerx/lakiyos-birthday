@@ -36,7 +36,10 @@
 
 ## Payments (updated 2026-11-17)
 - Paystack live key is set in Vercel as `PAYSTACK_SECRET_KEY` (Production only, never in the repo). `GET /api/paystack-stk` returns `{"configured":true,"mode":"live"}`, so the pay modal opens on the "Instant PIN Prompt" tab.
-- Google Sheet guest list integration added via `api/_sheet.js` and `apps-script/Code.gs`:
+- Guest list (chosen 2026-11-17, instead of the Google Sheet): private page `/guests.html` reads paid reservations live from Paystack via `api/guests.js`.
+  - Password is the Vercel Production env var `GUESTS_PASSWORD` (not in the repo). The page remembers it on that device until "Lock" is pressed.
+  - Shows only Paystack `success` transactions. Guests who pay by direct M-Pesa (api/notify.js) are not on it.
+- Google Sheet integration (built but not in use: `GSHEET_WEBHOOK_URL` is not set, so nothing is sent). Added via `api/_sheet.js` and `apps-script/Code.gs`:
   - `api/paystack-verify.js` and `api/paystack-webhook.js` log verified Paystack STK payments as `Paid` (deduplicated by `reference`).
   - `api/notify.js` logs direct M-Pesa submissions as `Pending Verification`.
   - `api/paystack-sync.js` can backfill past Paystack `success` transactions when `GSHEET_WEBHOOK_SECRET` is set.
