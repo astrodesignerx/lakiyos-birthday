@@ -60,6 +60,10 @@ module.exports = async (req, res) => {
         amount: 100000, // Ksh 1,000 in cents/subunits
         currency: 'KES',
         reference,
+        // Route the money to Ivy's Paystack subaccount (settles to her M-Pesa) when configured.
+        ...(process.env.PAYSTACK_SUBACCOUNT
+          ? { subaccount: process.env.PAYSTACK_SUBACCOUNT, bearer: 'subaccount' }
+          : {}),
         mobile_money: {
           phone,
           provider: 'mpesa',

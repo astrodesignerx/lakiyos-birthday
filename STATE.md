@@ -46,3 +46,4 @@
   - Still to set in Vercel (Production): `GSHEET_WEBHOOK_URL` (Apps Script Web App URL) and optional `GSHEET_WEBHOOK_SECRET`.
 - Still to do in the Paystack dashboard: set the webhook URL to `https://ivys-birthday.vercel.app/api/paystack-webhook`, and make sure Mobile Money (M-Pesa) is enabled under Settings > Preferences.
 - Optional and not set: `RESEND_API_KEY`, `IVY_EMAIL`, `RESEND_FROM` for email receipts.
+- Optional and not set: `PAYSTACK_SUBACCOUNT` (Ivy's subaccount code, `ACCT_...`). When set, `api/paystack-stk.js` routes each charge to that subaccount with `bearer: 'subaccount'`, so the money settles to Ivy's M-Pesa and she pays the Paystack fee. Give the subaccount a 0% main-account share.
