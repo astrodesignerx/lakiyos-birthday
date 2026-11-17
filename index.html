@@ -272,40 +272,8 @@
       <h2 class="paymodal__title" id="pay-title">Reserve Your Spot</h2>
       <p class="paymodal__amount">Ksh 1,000</p>
 
-      <div class="paymodal__tabs" role="tablist" aria-label="Payment method">
-        <button class="paymodal__tab is-active" type="button" role="tab" aria-selected="true" data-pay-tab="direct">Send to M-Pesa</button>
-        <button class="paymodal__tab" type="button" role="tab" aria-selected="false" data-pay-tab="stk">Instant PIN Prompt</button>
-      </div>
-
-      <!-- Panel 1: Direct M-Pesa to Ivy (works immediately) -->
-      <div class="paymodal__panel" data-pay-panel="direct">
-        <div class="paymodal__numberbox">
-          <div>
-            <span class="paymodal__label">Ivy's M-Pesa Number</span>
-            <strong class="paymodal__number" id="ivy-mpesa-num">0716 571 448</strong>
-          </div>
-          <button class="paymodal__copy" id="copy-mpesa" type="button">Copy</button>
-        </div>
-        <ol class="paymodal__steps">
-          <li>Go to <strong>M-Pesa → Send Money</strong> on your phone.</li>
-          <li>Enter <strong>0716 571 448</strong> and send <strong>Ksh 1,000</strong>.</li>
-          <li>Enter your name &amp; M-Pesa code below to notify me.</li>
-        </ol>
-        <form class="paymodal__form" id="direct-form">
-          <label class="paymodal__field">
-            <span>Your Name</span>
-            <input type="text" id="direct-name" placeholder="e.g. Brenda" required maxlength="60">
-          </label>
-          <label class="paymodal__field">
-            <span>M-Pesa Code or Phone (optional)</span>
-            <input type="text" id="direct-code" placeholder="e.g. UA84K92P1X" maxlength="30">
-          </label>
-          <button class="btn btn--glow paymodal__submit" type="submit"><span>Confirm Payment to Ivy</span></button>
-        </form>
-      </div>
-
-      <!-- Panel 2: Paystack M-Pesa STK Push (auto PIN prompt) -->
-      <div class="paymodal__panel" data-pay-panel="stk" hidden>
+      <!-- Paystack M-Pesa STK Push (PIN prompt on the guest's phone) -->
+      <div class="paymodal__panel">
         <p class="paymodal__note">Enter your M-Pesa number below and we will pop up the <strong>Ksh 1,000</strong> PIN prompt directly on your phone.</p>
         <form class="paymodal__form" id="stk-form">
           <label class="paymodal__field">
