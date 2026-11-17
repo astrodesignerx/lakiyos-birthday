@@ -291,20 +291,40 @@
   const topbar = $('#topbar'), timeline = $('#timeline');
   const navLinks = $$('.topbar__nav a');
   const sections = navLinks.map((a) => $(a.getAttribute('href')));
+  // The timeline line runs from the centre of the first dot to the centre of the last dot.
+  let lineTop = 10, lineBottom = 10;
+  function measureTimeline() {
+    const items = $$('.timeline__item', timeline);
+    if (!items.length) return;
+    const dotCentre = (el) => {
+      const cs = getComputedStyle(el, '::before');
+      return el.offsetTop + parseFloat(cs.top) + parseFloat(cs.height) / 2; // dots are border-box
+    };
+    lineTop = dotCentre(items[0]);
+    lineBottom = timeline.offsetHeight - dotCentre(items[items.length - 1]);
+    timeline.style.setProperty('--line-top', lineTop + 'px');
+    timeline.style.setProperty('--line-bottom', lineBottom + 'px');
+  }
+
   let ticking = false;
   function onScroll() {
     ticking = false;
     const y = window.scrollY, vh = window.innerHeight;
     topbar.classList.toggle('is-on', y > vh * 0.5);
     const r = timeline.getBoundingClientRect();
-    const fill = Math.min(1, Math.max(0, (vh * 0.62 - r.top) / r.height));
+    const span = r.height - lineTop - lineBottom;
+    const fill = Math.min(1, Math.max(0, (vh * 0.62 - r.top - lineTop) / (span || 1)));
     timeline.style.setProperty('--fill', fill.toFixed(3));
     let active = -1;
     sections.forEach((s, i) => { if (s && s.getBoundingClientRect().top < vh * 0.45) active = i; });
     navLinks.forEach((a, i) => a.classList.toggle('is-active', i === active));
   }
   addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
-  onScroll();
+  const relayout = () => { measureTimeline(); onScroll(); };
+  addEventListener('resize', relayout);
+  addEventListener('load', relayout);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(relayout);
+  relayout();
 
   /* ============ Hero portrait tilt (pointer devices only) ============ */
   const portrait = $('#portrait'), frameEl = $('.hero__frame');

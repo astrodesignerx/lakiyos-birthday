@@ -369,26 +369,26 @@ body.is-live .hero__neon { animation: rise var(--dur-4) var(--ease-out) forwards
 
 /* timeline */
 .timeline { position: relative; max-width: 720px; margin: 0 auto; padding-left: 0; --fill: 0; }
-.timeline::before, .timeline::after { content: ""; position: absolute; left: 118px; top: 10px; bottom: 10px; width: 2px; border-radius: 2px; }
+.timeline::before, .timeline::after { content: ""; position: absolute; left: 118px; top: var(--line-top, 10px); bottom: var(--line-bottom, 10px); width: 2px; border-radius: 2px; }
 .timeline::before { background: var(--line); }
 .timeline::after { background: linear-gradient(180deg, var(--blush), var(--rose)); box-shadow: 0 0 14px var(--rose); transform-origin: top; transform: scaleY(var(--fill)); }
-.timeline__item { position: relative; display: grid; grid-template-columns: 96px 1fr; column-gap: 46px; align-items: start; padding: 16px 0 26px; }
+.timeline__item { position: relative; display: grid; grid-template-columns: 96px 1fr; column-gap: 46px; align-items: center; padding: 20px 0; }
 .timeline__item::before {
-  content: ""; position: absolute; left: 112px; top: 24px; width: 14px; height: 14px; border-radius: 50%;
+  content: ""; position: absolute; left: 112px; top: calc(50% - 7px); width: 14px; height: 14px; border-radius: 50%;
   background: var(--bg); border: 2px solid var(--rose); z-index: 1;
   transition: background-color var(--dur-3) var(--ease-std), box-shadow var(--dur-3) var(--ease-std), transform var(--dur-3) var(--ease-spring);
 }
 .timeline__item.is-in::before { background: var(--rose); box-shadow: 0 0 0 5px rgba(212, 218, 232, .18), 0 0 18px var(--rose); transform: scale(1.150); }
-.timeline__item time { font-family: var(--serif); font-size: 1.300rem; font-weight: 500; color: var(--blush); text-align: right; padding-top: 12px; white-space: nowrap; }
+.timeline__item time { font-family: var(--serif); font-size: 1.300rem; font-weight: 500; color: var(--blush); text-align: right; line-height: 1; white-space: nowrap; }
 .timeline__item > div { padding: 16px 22px 18px; border-radius: 18px; background: var(--glass); border: 1px solid var(--line); backdrop-filter: blur(8px); transition: transform var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease-std); }
 .timeline__item > div:hover { transform: translateX(6px); border-color: rgba(235, 240, 248, .5); }
 .timeline__item h3 { font-family: var(--serif); font-weight: 500; font-size: 1.500rem; line-height: 1.200; color: var(--pearl); }
 .timeline__item p { color: var(--muted); font-size: .96rem; margin-top: 2px; }
 @media (max-width: 560px) {
   .timeline::before, .timeline::after { left: 6px; }
-  .timeline__item { grid-template-columns: 1fr; padding-left: 34px; }
-  .timeline__item::before { left: 0; top: 8px; }
-  .timeline__item time { text-align: left; padding: 0 0 8px; font-size: 1.150rem; }
+  .timeline__item { grid-template-columns: 1fr; align-items: start; padding: 16px 0 16px 34px; }
+  .timeline__item::before { left: 0; top: 18px; }
+  .timeline__item time { text-align: left; padding: 0 0 8px; font-size: 1.150rem; line-height: 1.300; }
 }
 
 /* dress code */
