@@ -35,7 +35,7 @@
 - `python -m http.server 5173 --bind 127.0.0.1` from the project root, then open http://localhost:5173/.
 
 ## Payments (updated 2026-11-17)
-- Paystack live key is set in Vercel as `PAYSTACK_SECRET_KEY` (Production only, never in the repo). `GET /api/paystack-stk` returns `{"configured":true,"mode":"live"}`, The pay modal only offers the Paystack M-Pesa PIN prompt: the "Send to M-Pesa" tab (manual send to Ivy's number + api/notify.js) was removed 2026-11-17, so every payment goes through Paystack and shows on the guest list.
+- Paystack live key is set in Vercel as `PAYSTACK_SECRET_KEY` (Production only, never in the repo). `GET /api/paystack-stk` returns `{"configured":true,"mode":"live"}`. The pay modal only offers the Paystack M-Pesa PIN prompt: the "Send to M-Pesa" tab (manual send to Ivy's number + api/notify.js) was removed 2026-11-17, so every payment goes through Paystack and shows on the guest list.
 - Guest list (chosen 2026-11-17, instead of the Google Sheet): private page `/guests.html` reads paid reservations live from Paystack via `api/guests.js`.
   - Two passwords, both Vercel Production env vars (not in the repo): `GUESTS_PASSWORD` (the host) and `GUESTS_PASSWORD_IVY` (Ivy). Either opens the list; change one without affecting the other. The page remembers it on that device until "Lock" is pressed.
   - Shows Paystack `success` transactions (the only way to pay on the site now).
