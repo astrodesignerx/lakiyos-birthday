@@ -1,4 +1,6 @@
-// Vercel Serverless Function: verifies a Paystack M-Pesa charge status and emails Ivy on success.
+// Vercel Serverless Function: verifies a Paystack M-Pesa charge status, logs to Google Sheets, and emails Ivy on success.
+const { recordGuestToSheet } = require('./_sheet');
+
 async function sendEmailNotification({ guestName, guestPhone, amountKes, reference, mpesaReceipt }) {
   const resendKey = process.env.RESEND_API_KEY;
   const ivyEmail = process.env.IVY_EMAIL;
@@ -60,13 +62,26 @@ module.exports = async (req, res) => {
       const guestName = meta.guest_name || 'Guest';
       const guestPhone = meta.guest_phone || tx.customer?.phone || '';
       const mpesaReceipt = tx.receipt_number || tx.authorization?.authorization_code || '';
-      await sendEmailNotification({
-        guestName,
-        guestPhone,
-        amountKes: Math.round((tx.amount || 100000) / 100),
-        reference,
-        mpesaReceipt,
-      });
+      const amountKes = Math.round((tx.amount || 100000) / 100);
+      await Promise.allSettled([
+        recordGuestToSheet({
+          name: guestName,
+          phone: guestPhone,
+          method: 'Paystack STK',
+          status: 'Paid',
+          reference,
+          code: mpesaReceipt,
+          amount: amountKes,
+          timestamp: tx.paid_at || tx.transaction_date || new Date().toISOString(),
+        }),
+        sendEmailNotification({
+          guestName,
+          guestPhone,
+          amountKes,
+          reference,
+          mpesaReceipt,
+        }),
+      ]);
     }
 
     return res.status(200).json({

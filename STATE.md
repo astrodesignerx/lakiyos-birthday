@@ -34,7 +34,12 @@
 ## Local preview
 - `python -m http.server 5173 --bind 127.0.0.1` from the project root, then open http://localhost:5173/.
 
-## Payments (updated 2026-11-15)
+## Payments (updated 2026-11-17)
 - Paystack live key is set in Vercel as `PAYSTACK_SECRET_KEY` (Production only, never in the repo). `GET /api/paystack-stk` returns `{"configured":true,"mode":"live"}`, so the pay modal opens on the "Instant PIN Prompt" tab.
+- Google Sheet guest list integration added via `api/_sheet.js` and `apps-script/Code.gs`:
+  - `api/paystack-verify.js` and `api/paystack-webhook.js` log verified Paystack STK payments as `Paid` (deduplicated by `reference`).
+  - `api/notify.js` logs direct M-Pesa submissions as `Pending Verification`.
+  - `api/paystack-sync.js` can backfill past Paystack `success` transactions when `GSHEET_WEBHOOK_SECRET` is set.
+  - Still to set in Vercel (Production): `GSHEET_WEBHOOK_URL` (Apps Script Web App URL) and optional `GSHEET_WEBHOOK_SECRET`.
 - Still to do in the Paystack dashboard: set the webhook URL to `https://ivys-birthday.vercel.app/api/paystack-webhook`, and make sure Mobile Money (M-Pesa) is enabled under Settings > Preferences.
 - Optional and not set: `RESEND_API_KEY`, `IVY_EMAIL`, `RESEND_FROM` for email receipts.
