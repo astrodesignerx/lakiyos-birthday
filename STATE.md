@@ -39,7 +39,7 @@
 - Guest list (chosen 2026-11-17, instead of the Google Sheet): private page `/guests.html` reads paid reservations live from Paystack via `api/guests.js`.
   - Two passwords, both Vercel Production env vars (not in the repo): `GUESTS_PASSWORD` (the host) and `GUESTS_PASSWORD_IVY` (Ivy). Either opens the list; change one without affecting the other. The page remembers it on that device until "Lock" is pressed.
   - Shows Paystack `success` transactions (the only way to pay on the site now).
-  - Manual entries (built 2026-11-19, not yet deployed): an "Add guest" button on `/guests.html` records guests who paid Ivy directly on M-Pesa (name, phone, amount, M-Pesa code, date, note). Rows show a "Paid Ivy directly" tag, "Added by Ivy/Host" and a Remove button; they count in the totals and CSV.
+  - Manual entries (live since 2026-11-19, commit 056e427): an "Add guest" button on `/guests.html` records guests who paid Ivy directly on M-Pesa (name, phone, amount, M-Pesa code, date, note). Rows show a "Paid Ivy directly" tag, "Added by Ivy/Host" and a Remove button; they count in the totals and CSV.
     - `api/guests.js` handles GET (Paystack + manual merged), POST (add) and DELETE `?id=` (remove manual only).
     - Stored in private Vercel Blob store `ivys-guests` (fra1, Production), one JSON file per guest under `manual-guests/`. Token `BLOB_READ_WRITE_TOKEN` was added to Vercel Production automatically. SDK: `@vercel/blob` in the new `package.json`.
 - Google Sheet integration (built but not in use: `GSHEET_WEBHOOK_URL` is not set, so nothing is sent). Added via `api/_sheet.js` and `apps-script/Code.gs`:
