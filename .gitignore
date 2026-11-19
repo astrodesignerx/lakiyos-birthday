@@ -10,3 +10,5 @@ WhatsApp Image*.jpeg
 *.py
 
 .vercel
+.env*
+node_modules/

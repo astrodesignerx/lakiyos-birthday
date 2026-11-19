@@ -38,7 +38,7 @@
     /* sign in */
     #login { max-width: 380px; margin: 0 auto; padding: 26px 22px; }
     #login label { display: block; font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-    input[type=password], input[type=search] {
+    input[type=password], input[type=search], input[type=text], input[type=tel], input[type=number], input[type=datetime-local] {
       width: 100%; font: inherit; color: var(--text); background: rgba(0, 0, 0, .35);
       border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; outline: none;
     }
@@ -74,7 +74,29 @@
     a { color: var(--silver); }
     .empty { padding: 36px 16px; text-align: center; color: var(--muted); }
 
+    /* add a guest who paid Ivy directly */
+    .add { display: grid; grid-template-rows: 0fr; opacity: 0; transform: translateY(-6px); visibility: hidden;
+      transition: grid-template-rows .26s cubic-bezier(.2, .8, .2, 1), opacity .2s ease-out, transform .26s cubic-bezier(.2, .8, .2, 1), visibility 0s linear .26s; }
+    .add.open { grid-template-rows: 1fr; opacity: 1; transform: none; visibility: visible; transition-delay: 0s; }
+    .add > div { overflow: hidden; }
+    .add form { padding: 18px; margin-bottom: 14px; }
+    .add h2 { font: 500 1.3rem/1.2 var(--serif); margin: 0 0 4px; }
+    .add .hint { color: var(--muted); font-size: .82rem; margin: 0 0 14px; }
+    .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .fields label { display: block; font-size: .66rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .fields input { color-scheme: dark; }
+    .add .row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
+    .add .msg { text-align: left; margin-top: 10px; }
+    .tag { display: inline-block; font-size: .62rem; letter-spacing: .16em; text-transform: uppercase; color: var(--silver);
+      border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px; margin-left: 6px; vertical-align: 2px; }
+    button.link { padding: 0; border: 0; background: none; color: var(--err); font-size: .62rem; letter-spacing: .16em; margin-top: 6px; }
+    button.link:hover { opacity: .75; }
+    button { transition: background-color .18s ease-out, border-color .18s ease-out, opacity .18s ease-out, transform .12s ease-out; }
+    button:not(:disabled):active { transform: scale(.97); }
+    @media (prefers-reduced-motion: reduce) { .add, button { transition: none; } }
+
     @media (max-width: 640px) {
+      .fields { grid-template-columns: 1fr; }
       .wrap { padding-top: 28px; }
       .stats { gap: 8px; }
       .stat { padding: 12px 6px; }
@@ -114,9 +136,31 @@
       <div class="bar">
         <input id="q" type="search" placeholder="Search name, phone or receipt" aria-label="Search guests">
         <div class="actions">
+          <button type="button" id="add-toggle" aria-expanded="false" aria-controls="add">Add guest</button>
           <button type="button" id="refresh">Refresh</button>
           <button type="button" id="csv">Download CSV</button>
           <button type="button" id="logout">Lock</button>
+        </div>
+      </div>
+      <div class="add" id="add">
+        <div>
+          <form id="add-form" class="card" autocomplete="off">
+            <h2>Add a guest who paid you directly</h2>
+            <p class="hint">For guests who sent the money straight to your M-Pesa. This is only a record; no money moves.</p>
+            <div class="fields">
+              <div><label for="a-name">Name</label><input id="a-name" type="text" maxlength="80" required></div>
+              <div><label for="a-phone">Phone (optional)</label><input id="a-phone" type="tel" maxlength="30"></div>
+              <div><label for="a-amount">Amount (Ksh)</label><input id="a-amount" type="number" min="0" step="1" value="1000" required></div>
+              <div><label for="a-receipt">M-Pesa code (optional)</label><input id="a-receipt" type="text" maxlength="30" placeholder="e.g. TKJ3XXXXXX"></div>
+              <div><label for="a-when">Paid on</label><input id="a-when" type="datetime-local"></div>
+              <div><label for="a-note">Note (optional)</label><input id="a-note" type="text" maxlength="200"></div>
+            </div>
+            <p class="msg" id="add-msg" role="alert"></p>
+            <div class="row">
+              <button type="button" id="add-cancel">Cancel</button>
+              <button type="submit" class="primary" id="add-save">Save guest</button>
+            </div>
+          </form>
         </div>
       </div>
       <p class="updated" id="updated"></p>
@@ -178,11 +222,11 @@
 
     function render() {
       const q = $('q').value.trim().toLowerCase();
-      const shown = guests.filter((g) => !q || [g.name, g.phone, g.email, g.receipt, g.reference].join(' ').toLowerCase().includes(q));
+      const shown = guests.filter((g) => !q || [g.name, g.phone, g.email, g.receipt, g.reference, g.note].join(' ').toLowerCase().includes(q));
       $('rows').innerHTML = shown.map((g, i) => `
         <tr>
           <td class="n">${guests.length - guests.indexOf(g)}</td>
-          <td><div class="name">${esc(g.name)}</div><div class="small">${g.phone ? `<a href="tel:${esc(g.phone)}">${esc(g.phone)}</a>` : ''}${g.email ? ' · ' + esc(g.email) : ''}</div></td>
+          <td><div class="name">${esc(g.name)}${g.source === 'manual' ? '<span class="tag">Paid Ivy directly</span>' : ''}</div><div class="small">${g.phone ? `<a href="tel:${esc(g.phone)}">${esc(g.phone)}</a>` : ''}${g.email ? ' · ' + esc(g.email) : ''}${g.note ? `<div>${esc(g.note)}</div>` : ''}${g.addedBy ? `<div>Added by ${esc(g.addedBy)}</div>` : ''}</div>${g.source === 'manual' ? `<button type="button" class="link" data-remove="${esc(g.id)}" data-name="${esc(g.name)}">Remove</button>` : ''}</td>
           <td class="when small">${esc(fmtDate(g.paidAt))}</td>
           <td class="ref small">${esc(g.receipt || g.reference)}</td>
           <td class="amt">Ksh ${fmtNum(g.amount)}</td>
@@ -215,15 +259,71 @@
     $('q').addEventListener('input', render);
     $('csv').addEventListener('click', () => {
       const cell = (v) => '"' + String(v ?? '').replace(/"/g, '""') + '"';
-      const head = ['Name', 'Phone', 'Email', 'Paid at (Nairobi)', 'Amount (Ksh)', 'Receipt', 'Reference'];
+      const head = ['Name', 'Phone', 'Email', 'Paid at (Nairobi)', 'Amount (Ksh)', 'Receipt', 'Reference', 'How paid', 'Note'];
       const lines = [head.map(cell).join(',')].concat(guests.map((g) =>
-        [g.name, g.phone, g.email, fmtDate(g.paidAt), g.amount, g.receipt, g.reference].map(cell).join(',')));
+        [g.name, g.phone, g.email, fmtDate(g.paidAt), g.amount, g.receipt, g.reference,
+          g.source === 'manual' ? 'Paid Ivy directly' : 'Paystack', g.note].map(cell).join(',')));
       const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
       a.download = 'ivy-guest-list.csv';
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    });
+
+    // ---- add / remove guests who paid Ivy directly ----
+    const nowLocal = () => {
+      const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+      return d.toISOString().slice(0, 16);
+    };
+    function openAdd(open) {
+      $('add').classList.toggle('open', open);
+      $('add-toggle').setAttribute('aria-expanded', String(open));
+      if (open) {
+        $('add-form').reset(); $('a-amount').value = '1000'; $('a-when').value = nowLocal(); $('add-msg').textContent = '';
+        setTimeout(() => $('a-name').focus(), 120);
+      }
+    }
+    $('add-toggle').addEventListener('click', () => openAdd(!$('add').classList.contains('open')));
+    $('add-cancel').addEventListener('click', () => openAdd(false));
+    $('add-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      $('add-save').disabled = true; $('add-msg').textContent = '';
+      try {
+        const when = $('a-when').value ? new Date($('a-when').value).toISOString() : '';
+        const r = await fetch('/api/guests', {
+          method: 'POST',
+          headers: { Authorization: 'Bearer ' + password, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: $('a-name').value, phone: $('a-phone').value, amount: $('a-amount').value,
+            receipt: $('a-receipt').value, paidAt: when, note: $('a-note').value }),
+        });
+        const data = await r.json().catch(() => ({}));
+        if (r.status === 401) { lock('Wrong password.'); return; }
+        if (!r.ok) throw new Error(data.error || 'Could not save the guest.');
+        openAdd(false);
+        await load();
+      } catch (err) {
+        $('add-msg').textContent = err.message;
+      } finally {
+        $('add-save').disabled = false;
+      }
+    });
+    $('rows').addEventListener('click', async (e) => {
+      const btn = e.target.closest('[data-remove]');
+      if (!btn) return;
+      if (!confirm('Remove ' + btn.dataset.name + ' from the list?')) return;
+      btn.disabled = true;
+      try {
+        const r = await fetch('/api/guests?id=' + encodeURIComponent(btn.dataset.remove), {
+          method: 'DELETE', headers: { Authorization: 'Bearer ' + password },
+        });
+        const data = await r.json().catch(() => ({}));
+        if (r.status === 401) { lock('Wrong password.'); return; }
+        if (!r.ok) throw new Error(data.error || 'Could not remove the guest.');
+        await load();
+      } catch (err) {
+        $('list-msg').textContent = err.message; btn.disabled = false;
+      }
     });
 
     if (password) unlock(); else $('pw').focus();
